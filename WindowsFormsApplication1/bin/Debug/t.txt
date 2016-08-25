@@ -1,0 +1,1 @@
+cd\ & g++ -o  C:\Users\gg\Desktop\main C:\Users\gg\Documents\p.cpp
