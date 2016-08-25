@@ -8,3 +8,13 @@ C:\Users\gg\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\Windo
 C:\Users\gg\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
 C:\Users\gg\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\textmaineiditor.csprojResolveAssemblyReference.cache
 C:\Users\gg\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\textmaineiditor.csprojResolveAssemblyReference.cache
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\gg\Desktop\Text editor\Simple-C-editor\WindowsFormsApplication1\obj\Debug\textmaineiditor.csproj.GenerateResource.Cache

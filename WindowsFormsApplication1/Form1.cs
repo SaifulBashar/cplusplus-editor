@@ -64,6 +64,7 @@ namespace WindowsFormsApplication1
             if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
+                filepath = open.FileName;
 
             }
         }
@@ -72,7 +73,7 @@ namespace WindowsFormsApplication1
         {
             SaveFileDialog saveFile1 = new SaveFileDialog();
 
-            // Initialize the SaveFileDialog to specify the RTF extension for the file.
+          
             saveFile1.DefaultExt = "*.cpp";
             saveFile1.Filter = "C++ Files|*.cpp";
 
@@ -100,14 +101,11 @@ namespace WindowsFormsApplication1
             {
                 // create the ProcessStartInfo using "cmd" as the program to be run,
                 // and "/c " as the parameters.  & C:\\Users\\student\\Desktop\\i.exe
-                //new System.Diagnostics.ProcessStartInfo("cmd", "/c cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath + " & C:\\Users\\gg\\Desktop\\main.exe");
+
                 // Incidentally, /c tells cmd that we want it to execute the command that follows,
                 // and then exit.
-                MessageBox.Show(" cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath);
-                File.WriteAllText("t.txt", "cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath);
-                System.Diagnostics.ProcessStartInfo procStartInfo =
+                System.Diagnostics.ProcessStartInfo procStartInfo =new System.Diagnostics.ProcessStartInfo("cmd", " /c cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath + " & C:\\Users\\gg\\Desktop\\main.exe");
 
-                new System.Diagnostics.ProcessStartInfo("cmd", " /c cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath + " & C:\\Users\\gg\\Desktop\\main.exe");
                 // The following commands are needed to redirect the standard output.
                 // This means that it will be redirected to the Process.StandardOutput StreamReader.
                 procStartInfo.RedirectStandardOutput = true;
@@ -131,16 +129,6 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("SOMETHING WRONG");
 
             }
-
-            //string strCmdText;
-            //strCmdText = "/c g++ -o  main.exe " + filepath + " & main.exe";
-            //System.Diagnostics.Process.Start("CMD.exe", strCmdText);
-
-
-
-
-
-
 
         }
         public static Boolean curslyBracesKeyPressed = false;
