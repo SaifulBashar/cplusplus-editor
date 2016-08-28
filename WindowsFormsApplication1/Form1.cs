@@ -115,7 +115,7 @@ namespace WindowsFormsApplication1
 
                 // Incidentally, /c tells cmd that we want it to execute the command that follows,
                 // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo =new System.Diagnostics.ProcessStartInfo("cmd", " /c cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath + " & C:\\Users\\gg\\Desktop\\main.exe");
+                System.Diagnostics.ProcessStartInfo procStartInfo =new System.Diagnostics.ProcessStartInfo("cmd", "/K cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath );
 
                 // The following commands are needed to redirect the standard output.
                 // This means that it will be redirected to the Process.StandardOutput StreamReader.
@@ -133,7 +133,7 @@ namespace WindowsFormsApplication1
                 result = proc.StandardOutput.ReadToEnd();
                 // Display the command output.
 
-                MessageBox.Show(result);
+                
             }
             catch (Exception objException)
             {
@@ -341,6 +341,43 @@ namespace WindowsFormsApplication1
             MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
 
             countWordLabel.Text = w.wordCounter(wordCollection);
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                // create the ProcessStartInfo using "cmd" as the program to be run,
+                // and "/c " as the parameters.  & C:\\Users\\student\\Desktop\\i.exe
+
+                // Incidentally, /c tells cmd that we want it to execute the command that follows,
+                // and then exit.
+                System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c cd\\ & C:\\Users\\gg\\Desktop\\main.exe");
+
+                // The following commands are needed to redirect the standard output.
+                // This means that it will be redirected to the Process.StandardOutput StreamReader.
+                procStartInfo.RedirectStandardOutput = true;
+                procStartInfo.UseShellExecute = false;
+                // Do not create the black window.
+                procStartInfo.CreateNoWindow = false;
+
+                // Now we create a process, assign its ProcessStartInfo and start it
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo = procStartInfo;
+                proc.Start();
+                proc.WaitForExit();
+                // Get the output into a string
+                result = proc.StandardOutput.ReadToEnd();
+                // Display the command output.
+
+                MessageBox.Show(result);
+            }
+            catch (Exception objException)
+            {
+                MessageBox.Show("SOMETHING WRONG");
+
+            }
 
         }
         

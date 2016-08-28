@@ -39,6 +39,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.countWordLabel = new System.Windows.Forms.Label();
             this.refreshButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -66,7 +67,6 @@
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.richTextBox1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.runButton, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(16, 27);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -85,14 +85,14 @@
             this.runButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.runButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
             this.runButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.runButton.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.runButton.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.runButton.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.runButton.Location = new System.Drawing.Point(4, 4);
+            this.runButton.Location = new System.Drawing.Point(268, -1);
             this.runButton.Margin = new System.Windows.Forms.Padding(4);
             this.runButton.Name = "runButton";
             this.runButton.Size = new System.Drawing.Size(97, 28);
             this.runButton.TabIndex = 1;
-            this.runButton.Text = "RUN";
+            this.runButton.Text = "BUILD";
             this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -174,11 +174,24 @@
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(167, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 27);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "RUN";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 690);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.runButton);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(this.countWordLabel);
             this.Controls.Add(this.label1);
@@ -209,6 +222,7 @@
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button runButton;
+        private System.Windows.Forms.Button button1;
 
     }
 }
