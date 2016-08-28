@@ -15,6 +15,7 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
+        public int build;
         public string filepath;
         public string result;
         SearchAndReplace s = new SearchAndReplace();
@@ -77,6 +78,7 @@ namespace WindowsFormsApplication1
             //MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
 
             //countWordLabel.Text = w.wordCounter(wordCollection);
+            
             this.openFile();
         }
 
@@ -115,8 +117,10 @@ namespace WindowsFormsApplication1
 
                 // Incidentally, /c tells cmd that we want it to execute the command that follows,
                 // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo =new System.Diagnostics.ProcessStartInfo("cmd", "/K cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath );
-
+                //System.Diagnostics.ProcessStartInfo procStartInfo =
+                //    new System.Diagnostics.ProcessStartInfo("cmd", "/K cd\\ & g++ -o  C:\\Users\\gg\\Desktop\\main " + filepath );
+                System.Diagnostics.ProcessStartInfo procStartInfo =
+                    new System.Diagnostics.ProcessStartInfo("cmd", "/K cd\\ & g++ -o "+filepath.Substring(0,filepath.Length-4)+" "+ filepath );
                 // The following commands are needed to redirect the standard output.
                 // This means that it will be redirected to the Process.StandardOutput StreamReader.
                 procStartInfo.RedirectStandardOutput = true;
@@ -132,6 +136,7 @@ namespace WindowsFormsApplication1
                 // Get the output into a string
                 result = proc.StandardOutput.ReadToEnd();
                 // Display the command output.
+                build = 1;
 
                 
             }
@@ -274,6 +279,7 @@ namespace WindowsFormsApplication1
             Form2 f2 = new Form2();
 
             f2.Show();
+            f2.getForm1(this);
 
             f2.getObjectFromForm2(ref s);
 
@@ -283,7 +289,8 @@ namespace WindowsFormsApplication1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Regex rgx = new Regex(@"\b" + s.RegexExpression + @"\b");
+            //Regex rgx = new Regex(@"\b" + s.RegexExpression + @"\b");
+            Regex rgx = new Regex(@""+s.RegexExpression+"");
             if (s.flag == 1 && rgx.IsMatch(richTextBox1.Text))
             {
 
@@ -308,6 +315,120 @@ namespace WindowsFormsApplication1
         }
         public void savefile()
         {
+            //SaveFileDialog saveFile1 = new SaveFileDialog();
+
+
+            //saveFile1.DefaultExt = "*.cpp";
+            //saveFile1.Filter = "C++ Files|*.cpp";
+
+            //// Determine if the user selected a file name from the saveFileDialog.
+            //if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+            //   saveFile1.FileName.Length > 0)
+            //{
+            //    filepath = saveFile1.FileName;
+
+            //    // Save the contents of the RichTextBox into the file.
+            //    richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
+            //}
+
+            string path = @"" + filepath + "";
+            if(!File.Exists(path)){
+                SaveFileDialog saveFile1 = new SaveFileDialog();
+
+
+                saveFile1.DefaultExt = "*.cpp";
+                saveFile1.Filter = "C++ Files|*.cpp";
+
+                // Determine if the user selected a file name from the saveFileDialog.
+                if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+                   saveFile1.FileName.Length > 0)
+                {
+                    filepath = saveFile1.FileName;
+
+                    // Save the contents of the RichTextBox into the file.
+                    richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
+                }
+            }
+            else
+                File.WriteAllText(path, richTextBox1.Text);
+
+        }
+        public void openFile()
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Text files (*.*)|*.*";
+            if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
+                filepath = open.FileName;
+
+            }
+            //MessageBox.Show(filepath.Substring(0,filepath.Length-4));
+            //word count after load file
+            //create object of WORDCOUNT
+            WordCount w = new WordCount();
+            w.regexExpression = @"\w+";
+            MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
+
+            countWordLabel.Text = w.wordCounter(wordCollection);
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (build == 1)
+            {
+                try
+                {
+                    // create the ProcessStartInfo using "cmd" as the program to be run,
+                    // and "/c " as the parameters.  & C:\\Users\\student\\Desktop\\i.exe
+
+                    // Incidentally, /c tells cmd that we want it to execute the command that follows,
+                    // and then exit.
+                    System.Diagnostics.ProcessStartInfo procStartInfo =
+                        new System.Diagnostics.ProcessStartInfo("cmd", "/c cd\\ & " + filepath.Substring(0, filepath.Length - 4));
+
+                    // The following commands are needed to redirect the standard output.
+                    // This means that it will be redirected to the Process.StandardOutput StreamReader.
+                    procStartInfo.RedirectStandardOutput = true;
+                    procStartInfo.UseShellExecute = false;
+                    // Do not create the black window.
+                    procStartInfo.CreateNoWindow = false;
+
+                    // Now we create a process, assign its ProcessStartInfo and start it
+                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    proc.StartInfo = procStartInfo;
+                    proc.Start();
+                    proc.WaitForExit();
+                    // Get the output into a string
+                    result = proc.StandardOutput.ReadToEnd();
+                    // Display the command output.
+
+                    MessageBox.Show(result);
+                    build = 0;
+                }
+                catch (Exception objException)
+                {
+                    MessageBox.Show("SOMETHING WRONG");
+
+                }
+            }
+            else
+                MessageBox.Show("Build first",
+    "Warning",
+    MessageBoxButtons.OK,
+    MessageBoxIcon.Warning,
+    MessageBoxDefaultButton.Button1);
+
+        }
+
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             SaveFileDialog saveFile1 = new SaveFileDialog();
 
 
@@ -323,62 +444,6 @@ namespace WindowsFormsApplication1
                 // Save the contents of the RichTextBox into the file.
                 richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
             }
-        }
-        public void openFile()
-        {
-            OpenFileDialog open = new OpenFileDialog();
-            open.Filter = "Text files (*.*)|*.*";
-            if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
-                filepath = open.FileName;
-
-            }
-            //word count after load file
-            //create object of WORDCOUNT
-            WordCount w = new WordCount();
-            w.regexExpression = @"\w+";
-            MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
-
-            countWordLabel.Text = w.wordCounter(wordCollection);
-
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            try
-            {
-                // create the ProcessStartInfo using "cmd" as the program to be run,
-                // and "/c " as the parameters.  & C:\\Users\\student\\Desktop\\i.exe
-
-                // Incidentally, /c tells cmd that we want it to execute the command that follows,
-                // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c cd\\ & C:\\Users\\gg\\Desktop\\main.exe");
-
-                // The following commands are needed to redirect the standard output.
-                // This means that it will be redirected to the Process.StandardOutput StreamReader.
-                procStartInfo.RedirectStandardOutput = true;
-                procStartInfo.UseShellExecute = false;
-                // Do not create the black window.
-                procStartInfo.CreateNoWindow = false;
-
-                // Now we create a process, assign its ProcessStartInfo and start it
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo = procStartInfo;
-                proc.Start();
-                proc.WaitForExit();
-                // Get the output into a string
-                result = proc.StandardOutput.ReadToEnd();
-                // Display the command output.
-
-                MessageBox.Show(result);
-            }
-            catch (Exception objException)
-            {
-                MessageBox.Show("SOMETHING WRONG");
-
-            }
-
         }
         
 

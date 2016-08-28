@@ -45,7 +45,22 @@ namespace WindowsFormsApplication1
 
             s.RegexExpression = searchtextBox.Text;
             s.replaceWord = replacetextBox.Text;
-            s.flag = 1;
+            
+            Regex rgx = new Regex(@"" + s.RegexExpression + "");
+            if ( rgx.IsMatch(h.richTextBox1.Text))
+            {
+
+
+
+                h.richTextBox1.Text = rgx.Replace(h.richTextBox1.Text, s.Replace);
+                s.flag = 0;
+            }
+            if (rgx.IsMatch(h.richTextBox1.Text) == false )
+            {
+                MessageBox.Show("No Match");
+                MessageBox.Show(h.richTextBox1.Text);
+            }
+            
             
             this.Hide();
         }
@@ -53,6 +68,11 @@ namespace WindowsFormsApplication1
         private void searchtextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+        public Form1 h = new Form1();
+        public void getForm1(Form1 f1)
+        {
+            h = f1;
         }
     }
 }
