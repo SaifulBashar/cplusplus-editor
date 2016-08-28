@@ -19,10 +19,11 @@ namespace WindowsFormsApplication1
         public string result;
         SearchAndReplace s = new SearchAndReplace();
         SyntaxColoring color = new SyntaxColoring();
+        Undo u = new Undo();
         public Form1()
         {
             InitializeComponent();
-
+            
 
         }
 
@@ -30,6 +31,7 @@ namespace WindowsFormsApplication1
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
+            
             richTextBox1.AcceptsTab = true;
 
             MatchCollection keywordMatches = color.match(richTextBox1.Text);
@@ -38,7 +40,7 @@ namespace WindowsFormsApplication1
             int originalLength = richTextBox1.SelectionLength;
             Color originalColor = Color.Black;
             
-            button1.Focus();
+            runButton.Focus();
             richTextBox1.SelectionStart = 0;
             richTextBox1.SelectionLength = richTextBox1.Text.Length;
             richTextBox1.SelectionColor = originalColor;
@@ -53,40 +55,49 @@ namespace WindowsFormsApplication1
             richTextBox1.SelectionStart = originalIndex;
             richTextBox1.SelectionLength = originalLength;
             richTextBox1.SelectionColor = originalColor;
+
             richTextBox1.Focus();
 
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog open = new OpenFileDialog();
-            open.Filter = "Text files (*.*)|*.*";
-            if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
-                filepath = open.FileName;
+            //OpenFileDialog open = new OpenFileDialog();
+            //open.Filter = "Text files (*.*)|*.*";
+            //if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //{
+            //    richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
+            //    filepath = open.FileName;
 
-            }
+            //}
+            ////word count after load file
+            ////create object of WORDCOUNT
+            //WordCount w = new WordCount();
+            //w.regexExpression = @"\w+";
+            //MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
+
+            //countWordLabel.Text = w.wordCounter(wordCollection);
+            this.openFile();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFile1 = new SaveFileDialog();
+            //SaveFileDialog saveFile1 = new SaveFileDialog();
 
           
-            saveFile1.DefaultExt = "*.cpp";
-            saveFile1.Filter = "C++ Files|*.cpp";
+            //saveFile1.DefaultExt = "*.cpp";
+            //saveFile1.Filter = "C++ Files|*.cpp";
 
-            // Determine if the user selected a file name from the saveFileDialog.
-            if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
-               saveFile1.FileName.Length > 0)
-            {
-                filepath = saveFile1.FileName;
-                //filepath = filepath.Replace(@"\", @"\\");
-                MessageBox.Show(filepath);
-                // Save the contents of the RichTextBox into the file.
-                richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
-            }
+            //// Determine if the user selected a file name from the saveFileDialog.
+            //if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+            //   saveFile1.FileName.Length > 0)
+            //{
+            //    filepath = saveFile1.FileName;
+                
+            //    // Save the contents of the RichTextBox into the file.
+            //    richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
+            //}
+            this.savefile();
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -188,9 +199,9 @@ namespace WindowsFormsApplication1
             {
                 if (curslyBracesKeyPressed == true)
                 {
-                    richTextBox1.Text = richTextBox1.Text.Insert(sel, "\n   \n");
+                    richTextBox1.Text = richTextBox1.Text.Insert(sel, "\n       \n");
                     e.Handled = true;
-                    richTextBox1.SelectionStart = sel + "   ".Length;
+                    richTextBox1.SelectionStart = sel + "        ".Length;
                     curslyBracesKeyPressed = false;
                     number += 1;
                 }
@@ -198,6 +209,29 @@ namespace WindowsFormsApplication1
 
 
             }
+
+            if (e.Modifiers == Keys.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    // you can add what ever keys you want to handle here
+                    case Keys.O:
+                        this.openFile();
+                        e.Handled = true;
+                        break;
+                    case Keys.S:
+                 
+                        e.Handled = true;
+                        this.savefile();
+                        break;
+                    //case Keys.Z:
+                    //    richTextBox1.Undo();
+                    //    e.Handled = true;
+                    //    break;
+                    default:
+                        break;
+                }
+            }            
         }
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -218,7 +252,8 @@ namespace WindowsFormsApplication1
         private void keyUp(object sender, KeyEventArgs e)
         {
             WordCount w = new WordCount();
-            w.regexExpression = @"[\W]+";
+            //w.regexExpression = @"[\W]+";
+            w.regexExpression = @"\w+";
             MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
 
             countWordLabel.Text = w.wordCounter(wordCollection);
@@ -267,6 +302,48 @@ namespace WindowsFormsApplication1
             }
         }
 
+        private void run(object sender, KeyEventArgs e)
+        {
+
+        }
+        public void savefile()
+        {
+            SaveFileDialog saveFile1 = new SaveFileDialog();
+
+
+            saveFile1.DefaultExt = "*.cpp";
+            saveFile1.Filter = "C++ Files|*.cpp";
+
+            // Determine if the user selected a file name from the saveFileDialog.
+            if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+               saveFile1.FileName.Length > 0)
+            {
+                filepath = saveFile1.FileName;
+
+                // Save the contents of the RichTextBox into the file.
+                richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
+            }
+        }
+        public void openFile()
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Text files (*.*)|*.*";
+            if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
+                filepath = open.FileName;
+
+            }
+            //word count after load file
+            //create object of WORDCOUNT
+            WordCount w = new WordCount();
+            w.regexExpression = @"\w+";
+            MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
+
+            countWordLabel.Text = w.wordCounter(wordCollection);
+
+        }
+        
 
     }
 }
