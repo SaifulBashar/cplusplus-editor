@@ -12,17 +12,18 @@ using System.Text.RegularExpressions;
 namespace WindowsFormsApplication1
 {
     public partial class Form2 : Form 
-    {
+    {   
+        //form1 class object
+        public Form1 h = new Form1();
         SearchAndReplace s = new SearchAndReplace();
-        Form1 f1 = new Form1();
         public Form2()
         {
             InitializeComponent();
         }
+        //passing reference of searchandreplaceclass object
         public void getObjectFromForm2(ref SearchAndReplace a )
         {
             s = a;
-           
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -42,26 +43,22 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            //s is a object of searchandreplace class
             s.RegexExpression = searchtextBox.Text;
             s.replaceWord = replacetextBox.Text;
-            
+            //initializing patter
             Regex rgx = new Regex(@"" + s.RegexExpression + "");
+            //chech pattern
             if ( rgx.IsMatch(h.richTextBox1.Text))
             {
-
-
-
-                h.richTextBox1.Text = rgx.Replace(h.richTextBox1.Text, s.Replace);
-                s.flag = 0;
+                //replace matching string
+                h.richTextBox1.Text = rgx.Replace(h.richTextBox1.Text, s.Replace);   
             }
-            if (rgx.IsMatch(h.richTextBox1.Text) == false )
+            //if no match found
+            else
             {
-                MessageBox.Show("No Match");
-                MessageBox.Show(h.richTextBox1.Text);
+                MessageBox.Show("no match");
             }
-            
-            
             this.Hide();
         }
 
@@ -69,7 +66,7 @@ namespace WindowsFormsApplication1
         {
 
         }
-        public Form1 h = new Form1();
+        
         public void getForm1(Form1 f1)
         {
             h = f1;

@@ -20,7 +20,6 @@ namespace WindowsFormsApplication1
         public string result;
         SearchAndReplace s = new SearchAndReplace();
         SyntaxColoring color = new SyntaxColoring();
-        Undo u = new Undo();
         public Form1()
         {
             InitializeComponent();
@@ -32,73 +31,57 @@ namespace WindowsFormsApplication1
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-
+            //activate tab key in richtextbox
             richTextBox1.AcceptsTab = true;
-
+            //color is a syntaxcolouring object
+            //color.match return array of match keyword
             MatchCollection keywordMatches = color.match(richTextBox1.Text);
-
+            //save current caret position
             int originalIndex = richTextBox1.SelectionStart;
+            /*Getting this property returns the number of characters in the current selection.
+             * Setting this property adjusts the length of the current selection to the specified value,
+             * keeping the beginning of the selection fixed.
+             * In general, when the specified selection length causes the selection to end in an invalid position 
+             * (for example, between a carriage return and a new-line character, or inside a tag),
+             * the selection length automatically 
+             * adjusts so that the resulting selection starts and ends in valid positions.*/
             int originalLength = richTextBox1.SelectionLength;
             Color originalColor = Color.Black;
-
+            //avoid blinking
             runButton.Focus();
+            // removes any previous highlighting (so modified words won't remain highlighted)
             richTextBox1.SelectionStart = 0;
             richTextBox1.SelectionLength = richTextBox1.Text.Length;
             richTextBox1.SelectionColor = originalColor;
 
             foreach (Match m in keywordMatches)
             {
+                //select match keyword
+                //colour it to blue
                 richTextBox1.SelectionStart = m.Index;
                 richTextBox1.SelectionLength = m.Length;
                 richTextBox1.SelectionColor = Color.Blue;
             }
-
+            // restoring the original colors, for further writing
             richTextBox1.SelectionStart = originalIndex;
             richTextBox1.SelectionLength = originalLength;
             richTextBox1.SelectionColor = originalColor;
-
+            // giving back the focus
             richTextBox1.Focus();
+            
+            
 
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog open = new OpenFileDialog();
-            //open.Filter = "Text files (*.*)|*.*";
-            //if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    richTextBox1.LoadFile(open.FileName, RichTextBoxStreamType.PlainText);
-            //    filepath = open.FileName;
-
-            //}
-            ////word count after load file
-            ////create object of WORDCOUNT
-            //WordCount w = new WordCount();
-            //w.regexExpression = @"\w+";
-            //MatchCollection wordCollection = Regex.Matches(richTextBox1.Text, w.regexExpression);
-
-            //countWordLabel.Text = w.wordCounter(wordCollection);
 
             this.openFile();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //SaveFileDialog saveFile1 = new SaveFileDialog();
-
-
-            //saveFile1.DefaultExt = "*.cpp";
-            //saveFile1.Filter = "C++ Files|*.cpp";
-
-            //// Determine if the user selected a file name from the saveFileDialog.
-            //if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
-            //   saveFile1.FileName.Length > 0)
-            //{
-            //    filepath = saveFile1.FileName;
-
-            //    // Save the contents of the RichTextBox into the file.
-            //    richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
-            //}
+            
             this.savefile();
         }
 
@@ -133,54 +116,84 @@ namespace WindowsFormsApplication1
                 proc.StartInfo = procStartInfo;
                 proc.Start();
                 proc.WaitForExit();
-                // Get the output into a string
-                result = proc.StandardOutput.ReadToEnd();
-                // Display the command output.
                 build = 1;
 
 
             }
             catch (Exception objException)
             {
-                MessageBox.Show("SOMETHING WRONG");
+                MessageBox.Show("SOMETHING WRONG"+objException);
 
             }
 
         }
         public static Boolean curslyBracesKeyPressed = false;
         public static Boolean semi = false;
+        /*KeyPress Event : This event is raised for character keys while the key is pressed 
+         * and then released. This event is not raised by noncharacter keys, 
+         * unlike KeyDown and KeyUp, which are also raised for noncharacter keys*/
         private void bracket(object sender, KeyPressEventArgs e)
         {
-
-
-
+            //convert keyboard charachter to string
             String s = e.KeyChar.ToString();
-
+            //current position of caret
             int sel = richTextBox1.SelectionStart;
-
+            //switch case for "("
+            //switch case for "{"
+            //switch case for "["
+            //switch case for "'"
             switch (s)
             {
                 case "(":
+                    //auto complete bracket
                     richTextBox1.Text = richTextBox1.Text.Insert(sel, "()");
+                    //Set Handled to true to cancel the KeyPress event.
                     e.Handled = true;
+                    //previous selection start is here
+                    //      |(
+                    //than insert |()
+                    //now selectionstart+1 means 
+                    //      (|)
                     richTextBox1.SelectionStart = sel + 1;
                     break;
 
                 case "{":
-                    String t = "{}";
-                    richTextBox1.Text = richTextBox1.Text.Insert(sel, t);
+                    //complete braces
+                    //also invoke keydown action for enter input
+                    richTextBox1.Text = richTextBox1.Text.Insert(sel, "{}");
+                    //Set Handled to true to cancel the KeyPress event.
                     e.Handled = true;
-                    richTextBox1.SelectionStart = sel + t.Length - 1;
+                    //previous selection start is here
+                    //      |{
+                    //than insert |{}
+                    //now selectionstart+1 means 
+                    //      {|}
+                    richTextBox1.SelectionStart = sel + 1;
+                    //boolen flag to keydown action that use press curslybrace
                     curslyBracesKeyPressed = true;
                     break;
 
-                case "[": richTextBox1.Text = richTextBox1.Text.Insert(sel, "[]");
+                case "[":
+                    //complete square bracket
+                    richTextBox1.Text = richTextBox1.Text.Insert(sel, "[]");
+                    //Set Handled to true to cancel the KeyPress event.
                     e.Handled = true;
+                    //previous selection start is here
+                    //      |[
+                    //than insert |[]
+                    //now selectionstart+1 means 
+                    //      [|]
                     richTextBox1.SelectionStart = sel + 1;
                     break;
 
                 case "'": richTextBox1.Text = richTextBox1.Text.Insert(sel, "''");
+                    //Set Handled to true to cancel the KeyPress event.
                     e.Handled = true;
+                    //previous selection start is here
+                    //      |'
+                    //than insert |''
+                    //now selectionstart+1 means 
+                    //      '|'
                     richTextBox1.SelectionStart = sel + 1;
                     break;
 
@@ -190,31 +203,36 @@ namespace WindowsFormsApplication1
 
 
         }
-        public int number = 0;
+        
+        /*KeyDown Event : This event raised as soon as the user presses a key on the keyboard, 
+        it repeats while the user keeps the key depressed.*/
         private void keydown(object sender, KeyEventArgs e)
         {
-
-            if (richTextBox1.Text.Length == 0)
-            {
-                number = 0;
-                curslyBracesKeyPressed = false;
-            }
+            
+            //current caret position
             int sel = richTextBox1.SelectionStart;
+            //if keyboard get enter input
             if (e.KeyCode == Keys.Enter)
             {
+                //chech did user input curslyBraces
                 if (curslyBracesKeyPressed == true)
                 {
+
                     richTextBox1.Text = richTextBox1.Text.Insert(sel, "\n       \n");
+                    //Set Handled to true to cancel the KeyPress event.
                     e.Handled = true;
                     richTextBox1.SelectionStart = sel + "        ".Length;
+                    //curslybraces is false
                     curslyBracesKeyPressed = false;
-                    number += 1;
+                    
                 }
 
 
 
             }
-
+            //it is for keyboard shortcut
+            //CTRL+O for open file
+            //CTRL+S for save file
             if (e.Modifiers == Keys.Control)
             {
                 switch (e.KeyCode)
@@ -229,10 +247,6 @@ namespace WindowsFormsApplication1
                         e.Handled = true;
                         this.savefile();
                         break;
-                    //case Keys.Z:
-                    //    richTextBox1.Undo();
-                    //    e.Handled = true;
-                    //    break;
                     default:
                         break;
                 }
@@ -253,7 +267,7 @@ namespace WindowsFormsApplication1
         {
 
         }
-
+        /*KeyUp Event : This event is raised after the user releases a key on the keyboard.*/
         private void keyUp(object sender, KeyEventArgs e)
         {
             WordCount w = new WordCount();
@@ -276,39 +290,15 @@ namespace WindowsFormsApplication1
 
         private void replaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //create form2 object
             Form2 f2 = new Form2();
-
+            //display form2
             f2.Show();
+            //current form2  object as parameter
             f2.getForm1(this);
-
+            
             f2.getObjectFromForm2(ref s);
-
-
         }
-
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //Regex rgx = new Regex(@"\b" + s.RegexExpression + @"\b");
-            Regex rgx = new Regex(@"" + s.RegexExpression + "");
-            if (s.flag == 1 && rgx.IsMatch(richTextBox1.Text))
-            {
-
-
-
-                richTextBox1.Text = rgx.Replace(richTextBox1.Text, s.Replace);
-                s.flag = 0;
-            }
-            if (rgx.IsMatch(richTextBox1.Text) == false && s.flag == 1)
-            {
-                MessageBox.Show("No Match");
-            }
-            if (s.flag == 0)
-            {
-
-            }
-        }
-
         private void run(object sender, KeyEventArgs e)
         {
 
@@ -405,7 +395,7 @@ namespace WindowsFormsApplication1
                 }
                 catch (Exception objException)
                 {
-                    MessageBox.Show("SOMETHING WRONG");
+                    MessageBox.Show("SOMETHING WRONG"+ objException);
 
                 }
             }
@@ -436,6 +426,18 @@ namespace WindowsFormsApplication1
                 // Save the contents of the RichTextBox into the file.
                 richTextBox1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
             }
+        }
+
+        private void lineNumberOnSelectionChanged(object sender, EventArgs e)
+        {
+            int i = richTextBox1.SelectionStart;
+            
+            line.Text = "Line number :" + (richTextBox1.GetLineFromCharIndex(i)+1).ToString();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
 
 
